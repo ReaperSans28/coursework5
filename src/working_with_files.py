@@ -2,13 +2,11 @@ import psycopg2
 from psycopg2 import sql
 
 
-def create_database(database):
+def create_database(database, params):
     """
     Функция для создания таблицы.
     """
-    conn = psycopg2.connect(
-        dbname="postgres", user="postgress", password="5893", host="localhost"
-    )
+    conn = psycopg2.connect(dbname="postgres", **params)
     conn.set_client_encoding("UTF8")
     conn.autocommit = True
     cur = conn.cursor()
@@ -19,9 +17,7 @@ def create_database(database):
     cur.close()
     conn.close()
 
-    with psycopg2.connect(
-        dbname=database, user="postgres", password="5893", host="localhost"
-    ) as conn:
+    with psycopg2.connect(dbname=database, **params) as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """CREATE TABLE employers (
@@ -41,13 +37,11 @@ def create_database(database):
     return None
 
 
-def save_to_database(database, vacancy):
+def save_to_database(database, vacancy, params):
     """
     Функция для добавления значений в таблицу.
     """
-    with psycopg2.connect(
-        dbname=database, user="postgres", password="5893", host="localhost"
-    ) as conn:
+    with psycopg2.connect(dbname=database, **params) as conn:
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute(

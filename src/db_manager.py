@@ -6,17 +6,10 @@ class DBManager:
     Класс, который будет подключаться к базе данных PostgreSQL.
     """
 
-    def __init__(self, database, user, password, host):
-        self.host = host
+    def __init__(self, database, params):
         self.database = database
-        self.user = user
-        self.password = password
-        self.conn = psycopg2.connect(
-            host=self.host,
-            database=self.database,
-            user=self.user,
-            password=self.password,
-        )
+        self.params = params
+        self.conn = psycopg2.connect(dbname=self.database, **self.params)
         self.cur = self.conn.cursor()
 
     def get_companies_and_vacancies_count(self):

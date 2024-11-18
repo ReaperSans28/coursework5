@@ -1,3 +1,4 @@
+from src.config import config
 from src.db_manager import DBManager
 from src.hh_api import HeadHunterAPI
 from src.vacancy import Vacancy
@@ -18,17 +19,19 @@ def main():
         "10819001",
     ]
 
+    params = config()
     vacancies = HeadHunterAPI(company_ids)
 
     if vacancies.get_vacancies() != [[]]:
         user_input = input("Введите ключевое слово для поиска вакансий: ")
 
+        create_database("HHApi", params)
+
         for vacancy in vacancies.get_vacancies()[0]:
             vac = Vacancy(vacancy)
-            create_database("HHApi")
-            save_to_database("HHApi", vac)
+            save_to_database("HHApi", vac, params)
 
-        dbmanager = DBManager("HHApi", "postgres", "5893", "localhost")
+        dbmanager = DBManager("HHApi", params)
         companies_and_vacancies_count = dbmanager.get_companies_and_vacancies_count()
         all_vacancies = dbmanager.get_all_vacancies()
         avg_salary = dbmanager.get_avg_salary()
